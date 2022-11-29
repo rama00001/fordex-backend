@@ -62,6 +62,21 @@ const updateBooking = async (req, res) => {
 
 }
 
+const deleteBooking = (req, res) => {
+    const id = req.params.id;
+    try {
+        Booking_info.findOneAndRemove(id)
+            .then(() => {
+                res.json({
+                    message: 'Booking deleted successfully'
+                })
+            })
+    }
+    catch (err) {
+        res.stauts(500).json({ error: err })
+    }
+}
+
 let corsOptions = {
     origin: ['http://localhost:5500', 'http://localhost:3000', 'http://localhost:3005']
 };
@@ -69,5 +84,8 @@ let corsOptions = {
 router.post('/booking/bookashoot', (req, res) => shotAdd(req, res))
 router.get('/booking/get-all-bookings', (req, res) => getAllBookings(req, res))
 router.put('/booking/update-booking-status/:id', (req, res) => updateBooking(req, res))
+router.delete('/booking/delete_booking/:id', (req, res) => deleteBooking(req, res))
+
+
 
 export default router;
