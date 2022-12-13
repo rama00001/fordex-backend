@@ -65,6 +65,11 @@ app.use(photo_grapher);
 
 import booking from './routes/booking.js';
 app.use(booking)
+
+
+import user from './routes/user.js';
+app.use(user)
+
 // var corsOptions = {
 //   credentials: true,
 //   origin: ['http://localhost:3000', 'http://localhost:80']
