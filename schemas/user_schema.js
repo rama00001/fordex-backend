@@ -1,32 +1,32 @@
 import mongoose from "mongoose";
 
 const user_info_schema = new mongoose.Schema({
-    first_name: {
+    b_firstname: {
         type: String,
         required: true
     },
-    last_name: {
+    b_lastname: {
         type: String,
         required: true
     },
-    password: {
+    b_password: {
         type: String,
         required: true
     },
     user_id: {
         type: String,
     },
-    email: {
+    b_email: {
         type: String,
         required: true
     },
-    mobile_number:{
+    b_mobile:{
         type: String,
         required: true
     },
     isActive: {
         type: Boolean,
-        required: true
+        // required: true
     }
 });
 

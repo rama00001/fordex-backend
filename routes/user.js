@@ -4,24 +4,25 @@ import { User_info } from '../schemas/user_schema.js';
 import Bcrypt from "bcryptjs";
 import springedge from 'springedge';
 import { Otp_info } from "../schemas/otp.js";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const register = async (req, res) => {
     try {
-        const first_name = req.body.first_name;
-        const last_name = req.body.last_name;
-        const email = req.body.email;
-        const mobile_number = req.body.mobile_number;
-        const user_id = `${uuidv4()}-${req.body.first_name}-${req.body.last_name}`
-        const isActive = req.body.isActive;
-        const password = Bcrypt.hashSync(req.body.password, 10);
+        const b_firstname = req.body.b_firstname;
+        const b_lastname = req.body.b_lastname;
+        const b_email = req.body.b_email;
+        const b_mobile = req.body.b_mobile;
+        // const user_id = `${uuidv4()}`
+        // const isActive = req.body.isActive;
+        const b_password = Bcrypt.hashSync(req.body.b_password, 10);
         const user = new User_info({
-            first_name, last_name, email, mobile_number, user_id, isActive, password
+          b_firstname, b_lastname, b_email, b_mobile, b_password
         });
 
         const result = await user.save()
         console.log(result);
-        res.json(result);
+        res.send({"message":"User registered successfully."});
 
     } catch (error) {
         console.log(error)
@@ -100,7 +101,7 @@ const verifyOTP = async (req, res, next) => {
     }
   };
   
-router.post('/user/signup', (req, res) => register(req, res))
+router.post('/client/register-client', (req, res) => register(req, res))
 router.post('/user/otpLogin', (req, res) => loginUserWithOtp(req, res))
 router.post("/user/verifyOtp", (req,res,next)=> verifyOTP(req,res,next));
 
