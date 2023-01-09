@@ -41,6 +41,30 @@ const getAllBookings = async (req, res) => {
     }
 }
 
+const getClientRecord = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*')
+    const email = req.params.email;
+    console.log(email);
+    try {
+        const bookingInfo= await Booking_info.findOne({c_email:email})
+        res.json(bookingInfo);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// const getClientRecord = async (req, res) => {
+//     res.set('Access-Control-Allow-Origin', '*')
+//     const email = req.params.email;
+//     console.log(email);
+//     try {
+//         const bookingInfo= await Booking_info.findOne({c_email:email})
+//         res.json(bookingInfo);
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+
 const updateBooking = async (req, res) => {
     const id = req.params.id;
     const payment_status = req.body.payment_status;
@@ -85,6 +109,7 @@ router.post('/booking/bookashoot', (req, res) => shotAdd(req, res))
 router.get('/booking/get-all-bookings', (req, res) => getAllBookings(req, res))
 router.put('/booking/update-booking-status/:id', (req, res) => updateBooking(req, res))
 router.delete('/booking/delete_booking/:id', (req, res) => deleteBooking(req, res))
+router.get('/booking/get-clientrecord-by/:email', (req, res) => getClientRecord(req, res))
 
 
 
