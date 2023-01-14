@@ -38,49 +38,26 @@ const cityAdd = async (req, res) => {
     }
 }
 
-
-
-const customerAdd = async (req, res) => {
-    try {
-        const customer = new Customer_Info({
-            city: req.body.city,
-            comments: req.body.comments,
-            email: req.body.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            mobile: req.body.mobile,
-            typeOfPhotoshoot: req.body.typeOfPhotoshoot,
-        });
-        const result = await customer.save()
-        res.json(result);
-
-    } catch (error) {
-        console.log(error)
-        res.json(error)
-    }
-}
-
-
 const cityById = async (req, res) => {
-    const id = req.query.id
+    const id = req.params.id
     try {
-        const cityInfo = await City_info.findOne({ id })
+        const cityInfo = await City_info.findOne({"_id": id })
         res.json(cityInfo);
     } catch (error) {
-        console.error(error)
+        res.send({staus:"false"});
     }
 }
 
 
 const cityByName = async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*')
-
-    const place = req.query.place
+    const _place = req.params.place;
+    console.log(_place)
     try {
-        const cityInfo = await City_info.findOne({ place })
+        const cityInfo = await City_info.findOne({"data.place": _place })
         res.json(cityInfo);
     } catch (error) {
-        console.error(error)
+        res.send({staus:"false"});
     }
 }
 
@@ -92,6 +69,5 @@ let corsOptions = {
 router.post('/city/add', (req, res) => cityAdd(req, res))
 router.get('/city/get-city-by-id/:id', (req, res) => cityById(req, res))
 router.get('/city/get-city-by-name/:place',  cors() ,(req, res) => cityByName(req, res))
-router.post('/forms/add-call-back',  cors(corsOptions), (req, res) => customerAdd(req, res))
 
 export default router;

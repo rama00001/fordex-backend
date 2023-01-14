@@ -62,6 +62,8 @@ app.use(city);
 import photo_grapher from './routes/photo_grapher.js';
 app.use(photo_grapher);
 
+import Callbackform from './routes/callbackform.js';
+app.use(Callbackform);
 
 import booking from './routes/booking.js';
 app.use(booking)
