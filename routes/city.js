@@ -1,13 +1,12 @@
 import express from "express";
 const router = express.Router();
 import { City_info } from '../schemas/city_schema.js';
-import { Customer_Info } from '../schemas/customer_schema.js';
 import { v4 as uuidv4 } from 'uuid';
 import Bcrypt from "bcryptjs";
 import cors from 'cors';
 
 const cityAdd = async (req, res) => {
-    console.log(req.body.data.id)
+    res.set('Access-Control-Allow-Origin', '*')
     try {
         const city = new City_info({
             status: req.body.status,
@@ -27,47 +26,55 @@ const cityAdd = async (req, res) => {
                 message: req.body.message
             },
         });
-        console.log("city" + city)
         const result = await city.save()
-        console.log(result);
         res.json(result);
 
     } catch (error) {
-        console.log(error)
-        res.json(error)
+        res.json({ message: error.errors.status.message })
     }
 }
 
 const cityById = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     const id = req.params.id
     try {
-        const cityInfo = await City_info.findOne({"_id": id })
-        res.json(cityInfo);
+        const cityInfo = await City_info.findOne({ "data.id": id })
+        if (cityInfo == null || cityInfo == '' || !cityInfo) {
+            res.json({ staus: "false", data: null, message: "city not found" });;
+        }
+        else {
+            res.json(cityInfo);
+        }
     } catch (error) {
-        res.send({staus:"false"});
+        res.send(error);
     }
 }
 
 
 const cityByName = async (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*')
+    res.set('Access-Control-Allow-Origin', '*');
     const _place = req.params.place;
     console.log(_place)
     try {
-        const cityInfo = await City_info.findOne({"data.place": _place })
-        res.json(cityInfo);
+        const cityInfo = await City_info.findOne({ "data.place": _place })
+        if (cityInfo == null || cityInfo == '' || !cityInfo) {
+            res.json({ staus: "false", data: null, message: "city not found" });;
+        }
+        else {
+            res.json(cityInfo);
+        }
     } catch (error) {
-        res.send({staus:"false"});
+        res.send(error);
     }
 }
 
 
 let corsOptions = {
-    origin: [ 'http://localhost:5500', 'http://localhost:3000','http://localhost:3005' ]
-  };
-  
-router.post('/city/add', (req, res) => cityAdd(req, res))
-router.get('/city/get-city-by-id/:id', (req, res) => cityById(req, res))
-router.get('/city/get-city-by-name/:place',  cors() ,(req, res) => cityByName(req, res))
+    origin: ['http://localhost:5500', 'http://localhost:3000', 'http://localhost:3005']
+};
+
+router.post('/city/set-city-details', cors(), (req, res) => cityAdd(req, res))
+router.get('/city/get-city-by-id/:id', cors(), (req, res) => cityById(req, res))
+router.get('/city/get-city-by-name/:place', cors(), (req, res) => cityByName(req, res))
 
 export default router;

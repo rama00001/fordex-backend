@@ -69,8 +69,13 @@ import booking from './routes/booking.js';
 app.use(booking)
 
 
-import user from './routes/user.js';
-app.use(user)
+import client from './routes/client.js';
+app.use(client)
+
+
+
+import otp from './routes/otp.js';
+app.use(otp)
 
 // var corsOptions = {
 //   credentials: true,

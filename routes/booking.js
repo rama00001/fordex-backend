@@ -6,6 +6,7 @@ import Bcrypt from "bcryptjs";
 import cors from 'cors';
 
 const shotAdd = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*')
     try {
         const shotBooking = new Booking_info({
             id: uuidv4(),
@@ -34,36 +35,35 @@ const shotAdd = async (req, res) => {
 const getAllBookings = async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*')
     try {
-        const bookingList = await Booking_info.find()
-        res.json(bookingList);
+        const bookingList = await Booking_info.find();
+        if (bookingList == null || bookingList == '' || !bookingList) {
+            res.json({ staus: "false", data: null, message: "bookingList not found" });;
+        }
+        else {
+            res.json(bookingList);
+        }
     } catch (error) {
         console.error(error)
     }
 }
 
 const getClientRecord = async (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*')
+    res.set('Access-Control-Allow-Origin', '*');
     const email = req.params.email;
     console.log(email);
     try {
-        const bookingInfo= await Booking_info.findOne({c_email:email})
-        res.json(bookingInfo);
+        const clientInfo = await Booking_info.findOne({ c_email: email })
+        if (clientInfo == null || clientInfo == '' || !clientInfo) {
+            res.json({ staus: "false", data: null, message: "client email not found" });;
+        }
+        else {
+            res.json(clientInfo);
+        }
     } catch (error) {
         console.error(error)
     }
 }
 
-// const getClientRecord = async (req, res) => {
-//     res.set('Access-Control-Allow-Origin', '*')
-//     const email = req.params.email;
-//     console.log(email);
-//     try {
-//         const bookingInfo= await Booking_info.findOne({c_email:email})
-//         res.json(bookingInfo);
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
 
 const updateBooking = async (req, res) => {
     const id = req.params.id;
@@ -105,12 +105,10 @@ let corsOptions = {
     origin: ['http://localhost:5500', 'http://localhost:3000', 'http://localhost:3005']
 };
 
-router.post('/booking/bookashoot', (req, res) => shotAdd(req, res))
-router.get('/booking/get-all-bookings', (req, res) => getAllBookings(req, res))
-router.put('/booking/update-booking-status/:id', (req, res) => updateBooking(req, res))
-router.delete('/booking/delete_booking/:id', (req, res) => deleteBooking(req, res))
-router.get('/booking/get-clientrecord-by/:email', (req, res) => getClientRecord(req, res))
-
-
+router.post('/booking/bookashoot', cors(), (req, res) => shotAdd(req, res))
+router.get('/booking/get-all-bookings', cors(), (req, res) => getAllBookings(req, res))
+router.put('/booking/update-booking-status/:id', cors(), (req, res) => updateBooking(req, res))
+router.delete('/booking/delete_booking/:id', cors(), (req, res) => deleteBooking(req, res))
+router.get('/booking/get-clientrecord-byemail/:email', (req, res) => getClientRecord(req, res))
 
 export default router;
